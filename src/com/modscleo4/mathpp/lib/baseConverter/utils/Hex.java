@@ -1,4 +1,4 @@
-package com.modscleo4.lib.baseConverter.utils;
+package com.modscleo4.mathpp.lib.baseConverter.utils;
 
 public class Hex {
     public static String hexa(int a) {

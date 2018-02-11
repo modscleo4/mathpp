@@ -1,4 +1,4 @@
-package com.modscleo4.lib.binomial;
+package com.modscleo4.mathpp.lib.binomial;
 
 /**
  * Created by modsc on 16/08/2017.

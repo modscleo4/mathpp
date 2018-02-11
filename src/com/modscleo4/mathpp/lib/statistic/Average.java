@@ -1,6 +1,6 @@
-package com.modscleo4.lib.statistic;
+package com.modscleo4.mathpp.lib.statistic;
 
-import static com.modscleo4.lib.statistic.Sigma.*;
+import static com.modscleo4.mathpp.lib.statistic.Sigma.sigma;
 
 /**
  * Created by modsc on 28/05/2017.

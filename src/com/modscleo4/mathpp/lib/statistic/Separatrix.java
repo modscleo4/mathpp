@@ -1,4 +1,4 @@
-package com.modscleo4.lib.statistic;
+package com.modscleo4.mathpp.lib.statistic;
 
 /**
  * Created by modsc on 28/05/2017.

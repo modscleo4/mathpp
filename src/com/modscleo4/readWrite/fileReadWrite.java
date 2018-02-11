@@ -4,7 +4,7 @@
 */
 package com.modscleo4.readWrite;
 
-import com.modscleo4.apps.GlobalSettings;
+import com.modscleo4.mathpp.settings.GlobalSettings;
 
 import java.io.*;
 import java.nio.file.Files;

@@ -1,182 +1,126 @@
-package com.modscleo4.lib.baseConverter;
+package com.modscleo4.mathpp.lib.baseConverter;
 
-import static com.modscleo4.readWrite.textReadWrite.*;
+import com.sun.istack.internal.NotNull;
+
+import static com.modscleo4.mathpp.lib.baseConverter.utils.Hex.hexa;
 import static java.lang.Math.pow;
-import static com.modscleo4.lib.baseConverter.utils.Hex.*;
+
+/**
+ * @Author: Modscleo4 (Dhiego Cassiano Fogaça Barbosa)
+ * */
 
 public class Binary {
-    public static int bin_to_dec(int b) {
-        int sum = 0;
+    private long value;
+    public int size;
 
-        String aa = String.valueOf(b);
-        if (aa.contains("2") || aa.contains("3") || aa.contains("4") || aa.contains("5") || aa.contains("6") || aa.contains("7") || aa.contains("8") || aa.contains("9")) {
-            return -1; // -1 is error code.
+    public Binary(@NotNull long value) throws NumberBaseException {
+        String aa = String.valueOf(value);
+        if ((aa.contains("2") || aa.contains("3") || aa.contains("4") || aa.contains("5") || aa.contains("6") || aa.contains("7") || aa.contains("8") || aa.contains("9")) || value < 0) {
+            throw new NumberBaseException("Not a binary number");
         }
-        if (b < 0) {
-            return -1; // -1 is error code.
-        }
-	    int length = aa.length();
-	    dbgPrint("length = " + length);
-	    int l = length - 1;
-	    dbgPrint("l = " + l);
-        for (int i = length; i >= 1; i--) {
-		    int p = (int)pow(10, l);
-		    dbgPrint("p = " + p);
-		    int a = b / p % 10;
-		    dbgPrint("a = " + a);
-            a = a * (int)pow(2, l);
-            dbgPrint("a = " + a);
+
+        this.value = value;
+        size = aa.length();
+    }
+
+    public long toLong() {
+        return value;
+    }
+
+    public Decimal toDecimal() {
+        long sum = 0, b = this.toLong();
+
+        int l = size - 1;
+        for (int i = size; i >= 1; i--) {
+            long p = (long)pow(10, l);
+            long a = b / p % 10;
+            a = a * (long)pow(2, l);
             sum = sum + a;
-            dbgPrint("sum = " + sum);
             l--;
         }
-        return sum;
+        return new Decimal(sum);
     }
 
-    public static int bin_to_oc(int b) {
-        int sum = 0;
+    public Octal toOctal() {
+        long sum;
+        
+        long mod = size % 3, rest = 3 - mod;
+        long q = size + rest, l = size - 1;
 
-        String bb = "", aa = String.valueOf(b);
-        if (aa.contains("2") || aa.contains("3") || aa.contains("4") || aa.contains("5") || aa.contains("6") || aa.contains("7") || aa.contains("8") || aa.contains("9")) {
-            return -1; // -1 is error code.
-        }
-        if (b < 0) {
-            return -1; // -1 is error code.
-        }
-	    int length = aa.length();
-        dbgPrint("length = " + length);
-	    int q = length;
-	    dbgPrint("q = " + q);
-					
-	    int mod = length % 3;
-	    dbgPrint("mod = " + mod);
-	    int rest = 3 - mod;
-	    dbgPrint("rest = " + rest);
-        length = length + rest;
-        dbgPrint("length = " + length);
-	    int l = length - 1;
-        dbgPrint("l = " + l);
-	    int size = length;
-	    dbgPrint("size = " + size);
-        int[] nums = new int[size];
+        long[] nums = new long[size];
 
-        dbgPrint("======assigning values to array======");
-        for (int i = rest; i <= l; i++) {
-		    int p = (int)pow(10, --q);
-		    dbgPrint("p = " + p);
-		    int a = b / p % 10;
-            dbgPrint("a = " + a);
+        String bb = "";
+        for (int i = (int)rest; i <= l; i++) {
+            long p = (long)pow(10, --q);
+            long a = this.value / p % 10;
             nums[i] = a;
-            dbgPrint("nums[" + i + "] = " + nums[i]);
         }
-	    int[] conv = new int[3];
+        long[] conv = new long[3];
         int pos = 0;
-        for (int i=0; i<length;) {
-            int max = i + 3;
-            dbgPrint("max = " + max);
-                for (int j = i; j < max; j++) {
-                    conv[pos] = nums[j];
-                    dbgPrint("conv[" + pos + "] = " + conv[pos]);
-                    pos++;
-                    i++;
-                }
-            pos = 0;
-            sum = 0;
-            int posB;
-            for (int posA=0; posA < 3; posA++) {
-                posB = 2 - posA;
-                dbgPrint("posB = " + posB);
-                int a = conv[posA];
-                dbgPrint("a = " + a);
-                int power = (int)pow(2, posB);
-                dbgPrint("power = " + power);
-                a = a * power;
-                dbgPrint("a = " + a);
-                sum += a;
-                dbgPrint("sum = " + sum);
-            }
-            bb += String.valueOf(sum);
-        }
-        return Integer.valueOf(bb);
-    }
-
-    public static String bin_to_hex(int b) {
-
-        String aa = String.valueOf(b), ca = "", sumA = "";
-        if (aa.contains("2") || aa.contains("3") || aa.contains("4") || aa.contains("5") || aa.contains("6") || aa.contains("7") || aa.contains("8") || aa.contains("9")) {
-            return "-1"; // -1 is error code.
-        }
-        if (b < 0) {
-            return "-1"; // -1 is error code.
-        }
-	    int sum = 0;
-	    int length = aa.length();
-	    dbgPrint("length = " + length);
-	    int q = length;
-	    dbgPrint("q = " + q);
-	
-	    int mod = length % 4;
-	    dbgPrint("mod = " + mod);
-	    int rest = 4 - mod;
-	    dbgPrint("rest = " + rest);
-        length = length + rest;
-        dbgPrint("length = " + length);
-	    int l = length - 1;
-	    dbgPrint("l = " + l);
-	    int size = length;
-	    dbgPrint("size = " + size);
-
-        int[] nums = new int[size];
-
-        dbgPrint("======assigning values to array======");
-        for (int i = rest; i <= l; i++) {
-            int p = (int)pow(10, --q);
-            dbgPrint("p = " + p);
-            int a = b / p % 10;
-            dbgPrint("a = " + a);
-            nums[i] = a;
-            dbgPrint("nums[" + i + "] = " + nums[i]);
-        }
-	
-	    int[] conv = new int[4];
-	    int pos = 0;
-
-        for (int i = 0; i < length;) {
-		int max = i + 4;
-		dbgPrint("max = " + max);
+        for (int i = 0; i < size;) {
+            long max = i + 3;
             for (int j = i; j < max; j++) {
-                conv[pos] = nums[i];
-                dbgPrint("conv[" + pos + "] = " + conv[pos]);
+                conv[pos] = nums[j];
                 pos++;
                 i++;
             }
             pos = 0;
             sum = 0;
-		int posB;
-            for (int posA=0; posA < 4; posA++) {
-                posB = 3 - posA;
-                dbgPrint("posB = " + posB);
-			    int a = conv[posA];
-			    dbgPrint("a = " + a);
-			    int power = (int)pow(2, posB);
-			    dbgPrint("power = " + power);
+            long posB;
+            for (int posA=0; posA < 3; posA++) {
+                posB = 2 - posA;
+                long a = conv[posA];
+                long power = (long)pow(2, posB);
                 a = a * power;
-                dbgPrint("a = " + a);
                 sum += a;
-                dbgPrint("sum = " + sum);
             }
-            if (sum > 9 && sum < 16) {
-                ca = hexa(sum);
-                dbgPrint("ca = " + ca);
-                sumA += ca;
-                dbgPrint("sumA = " + sumA);
-            } else {
-                String aaa = String.valueOf(sum);
-                dbgPrint("aaa = " + aaa);
-                sumA += aaa;
-                dbgPrint("sumA = " + sumA);
-            }
+            bb += String.valueOf(sum);
         }
-        return sumA;
+        return new Octal(Long.valueOf(bb));
+    }
+
+    public Hexadecimal toHex() {
+
+        String sumA = "";
+
+        long sum;
+
+        long mod = size % 4, rest = 4 - mod;
+        long q = size + rest, l = size - 1;
+
+        long[] nums = new long[size];
+
+        for (int i = (int)rest; i <= l; i++) {
+            long p = (long)pow(10, --q);
+            long a = this.value / p % 10;
+            nums[i] = a;
+        }
+
+        long[] conv = new long[4];
+        int pos = 0;
+
+        for (int i = 0; i < size;) {
+            long max = i + 4;
+            for (int j = i; j < max; j++) {
+                conv[pos] = nums[i];
+                pos++;
+                i++;
+            }
+            pos = 0;
+            sum = 0;
+            long posB;
+            for (int posA = 0; posA < 4; posA++) {
+                posB = 3 - posA;
+                long a = conv[posA];
+                long power = (long)pow(2, posB);
+                a = a * power;
+                sum += a;
+            }
+            if (sum > 9 && sum < 16)
+                sumA += hexa((int)sum);
+            else
+                sumA += String.valueOf(sum);
+        }
+        return new Hexadecimal(sumA);
     }
 }

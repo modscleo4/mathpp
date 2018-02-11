@@ -2,7 +2,7 @@ package com.modscleo4.readWrite;
 
 import java.util.Scanner;
 
-import static com.modscleo4.apps.GlobalSettings.*;
+import static com.modscleo4.mathpp.settings.GlobalSettings.*;
 
 public class textReadWrite {
     // Print

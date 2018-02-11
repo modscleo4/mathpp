@@ -1,7 +1,7 @@
-package com.modscleo4.lib.statistic;
+package com.modscleo4.mathpp.lib.statistic;
 
-import static com.modscleo4.lib.statistic.Sigma.fc;
-import static com.modscleo4.lib.statistic.Sigma.sigma;
+import static com.modscleo4.mathpp.lib.statistic.Sigma.fc;
+import static com.modscleo4.mathpp.lib.statistic.Sigma.sigma;
 
 /**
  * Created by modsc on 08/06/2017.

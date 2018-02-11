@@ -1,4 +1,8 @@
 package com.modscleo4.mathpp.lib.matrix;
 
-public class InvalidMatrixException {
+public class InvalidMatrixException extends Exception {
+    public InvalidMatrixException() { super(); }
+    public InvalidMatrixException(String message) { super(message); }
+    public InvalidMatrixException(String message, Throwable cause) { super(message, cause); }
+    public InvalidMatrixException(Throwable cause) { super(cause); }
 }
