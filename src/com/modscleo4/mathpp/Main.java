@@ -1,13 +1,10 @@
 package com.modscleo4;
 
-import com.modscleo4.apps.*;
+import com.modscleo4.mathpp.lib.apps.*;
 import com.modscleo4.gui.MainWindow;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
-import static com.modscleo4.readWrite.fileReadWrite.readLine;
-import static com.modscleo4.readWrite.textReadWrite.*;
 
 public class Main {
     public static boolean firstRun = true;
