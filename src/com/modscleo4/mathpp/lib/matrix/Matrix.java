@@ -76,6 +76,61 @@ public class Matrix {
         return ret;
     }
 
+    public boolean isDiagonal() {
+        boolean ret = false;
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if (i == j && matrix[i][j] != 0)
+                    ret = true;
+                else if (i != j && matrix[i][j] == 0)
+                    ret = true;
+                else
+                    return false;
+        return ret;
+    }
+
+    public boolean isOpposite(Matrix mat) throws InvalidMatrixException {
+        return (this.equals(mat.invertSignal()));
+    }
+
+    public boolean isSymmetric() throws InvalidMatrixException {
+        return (this.equals(this.transpose()));
+    }
+
+    public boolean isAntiSymmetric() throws InvalidMatrixException {
+        return (this.equals(this.transpose().invertSignal()));
+    }
+
+    public boolean isTriangular() {
+        boolean ret = false;
+        double[][] a = this.toDoubleArray();
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if (i < j)
+                    if (a[i][j] == 0)
+                        ret = true;
+                    else {
+                        ret = false;
+                        break;
+                    }
+
+        if (!ret) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (i > j)
+                        if (a[i][j] == 0)
+                            ret = true;
+                        else {
+                            ret = false;
+                            break;
+                        }
+                }
+            }
+        }
+
+        return ret;
+    }
+
     public void random(@NotNull int limitMin, @NotNull int limitMax) {
         if (limitMin > limitMax)
             throw new IllegalArgumentException("limitMin greater than limitMax");
@@ -86,12 +141,48 @@ public class Matrix {
             }
     }
 
-    public Matrix smaller() throws InvalidMatrixException {
+    public boolean equals(Matrix mat) {
+        if (this.width == mat.width && this.height == mat.height) {
+            boolean ret = false;
+            double[][] a = this.toDoubleArray();
+            double[][] b = mat.toDoubleArray();
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (a[i][j] == b[i][j])
+                        ret = true;
+                    else
+                        return false;
+                }
+            }
+            return ret;
+        } else
+            return false;
+    }
+
+    public Matrix invertSignal() throws InvalidMatrixException {
+        double[][] mat = this.toDoubleArray();
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                mat[i][j] *= -1;
+        return new Matrix(height, width, mat);
+    }
+
+    public Matrix smaller(@NotNull int line, @NotNull int col) throws InvalidMatrixException {
         if (this.isSquare() && width > 1) {
             double[][] matSmall = new double[height - 1][width - 1];
-            for (int i = 0; i < height - 1; i++)
-                for (int j = 0; j < width - 1; j++)
-                    matSmall[i][j] = matrix[i][j];
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width; j++) {
+                    if (i < line)
+                        if (j < col)
+                            matSmall[i][j] = matrix[i][j];
+                        else if (j > col)
+                            matSmall[i][j-  1] = matrix[i][j];
+                    else if (i > line)
+                        if (j < col)
+                            matSmall[i - 1][j] = matrix[i][j];
+                        else if (j > col)
+                        matSmall[i - 1][j - 1] = matrix[i][j];
+                }
 
             return new Matrix(height - 1, width - 1, matSmall);
         } else
@@ -115,14 +206,14 @@ public class Matrix {
                 else
                     s = -1;
 
-                sum += s * matrix[0][i] * this.smaller().determinant();
+                sum += s * matrix[0][i] * this.smaller(0, i).determinant();
             }
             return sum;
         } else
             throw new InvalidMatrixException("Matrix is not square");
     }
 
-    public double cofactor(@NotNull int line, @NotNull int column) throws Exception {
+    public double cofactor(@NotNull int line, @NotNull int column) throws InvalidMatrixException {
         if (isSquare())
             return pow((-1), (line + column)) * this.determinant();
         else
@@ -137,7 +228,7 @@ public class Matrix {
         return new Matrix(width, height, transp);
     }
 
-    public Matrix inverse() throws Exception {
+    public Matrix inverse() throws InvalidMatrixException {
         if (isSquare()) {
             double[][] mat = new double[width][width];
             for (int i = 0; i < width; i++)
