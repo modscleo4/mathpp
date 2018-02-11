@@ -1,6 +1,7 @@
 package com.modscleo4.mathpp.gui;
 
 import com.modscleo4.mathpp.lang.Lang;
+import com.modscleo4.mathpp.lib.baseConverter.*;
 import com.modscleo4.mathpp.lib.matrix.InvalidMatrixException;
 import com.modscleo4.mathpp.settings.Settings;
 
@@ -12,16 +13,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.modscleo4.mathpp.lib.baseConverter.Binary.*;
-import static com.modscleo4.mathpp.lib.baseConverter.Decimal.*;
-import static com.modscleo4.mathpp.lib.baseConverter.Hexadecimal.*;
-import static com.modscleo4.mathpp.lib.baseConverter.Octal.*;
 import com.modscleo4.mathpp.lib.matrix.Matrix;
 import static com.modscleo4.mathpp.settings.GlobalSettings.*;
 import static com.modscleo4.mathpp.lang.Lang.*;
 
 public class MainWindow {
-    private int bin, dec, oc;
+    private long bin, dec, oc;
     private String hex;
 
     public MainWindow() {
@@ -31,10 +28,14 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                bin = Integer.valueOf(binary.getText());
-                decimal.setText(String.valueOf(bin_to_dec(bin)));
-                octal.setText(String.valueOf(bin_to_oc(bin)));
-                hexadecimal.setText(bin_to_hex(bin));
+                bin = Long.valueOf(binary.getText());
+                try {
+                    decimal.setText(String.valueOf(new Binary(bin).toDecimal().toLong()));
+                    octal.setText(String.valueOf(new Binary(bin).toOctal().toLong()));
+                    hexadecimal.setText(new Binary(bin).toHex().toString());
+                } catch (NumberBaseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -42,10 +43,14 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                dec = Integer.valueOf(decimal.getText());
-                binary.setText(String.valueOf(dec_to_bin(dec)));
-                octal.setText(String.valueOf(dec_to_oc(dec)));
-                hexadecimal.setText(dec_to_hex(dec));
+                dec = Long.valueOf(decimal.getText());
+                try {
+                    binary.setText(String.valueOf(new Decimal(dec).toBinary().toLong()));
+                    octal.setText(String.valueOf(new Decimal(dec).toOctal().toLong()));
+                    hexadecimal.setText(new Decimal(dec).toHex().toString());
+                } catch (NumberBaseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -53,10 +58,14 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                oc = Integer.valueOf(octal.getText());
-                binary.setText(String.valueOf(oc_to_bin(oc)));
-                decimal.setText(String.valueOf(oc_to_dec(oc)));
-                hexadecimal.setText(oc_to_hex(oc));
+                oc = Long.valueOf(octal.getText());
+                try {
+                    binary.setText(String.valueOf(new Octal(oc).toBinary().toLong()));
+                    decimal.setText(String.valueOf(new Octal(oc).toDecimal().toLong()));
+                    hexadecimal.setText(new Octal(oc).toHex().toString());
+                } catch (NumberBaseException e) {
+                    e.printStackTrace();
+                }
             }
         });
         
@@ -65,9 +74,13 @@ public class MainWindow {
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
                 hex = hexadecimal.getText();
-                binary.setText(String.valueOf(hex_to_bin(hex)));
-                decimal.setText(String.valueOf(hex_to_dec(hex)));
-                octal.setText(String.valueOf(hex_to_oc(hex)));
+                try {
+                    binary.setText(String.valueOf(new Hexadecimal(hex).toBinary().toLong()));
+                    decimal.setText(String.valueOf(new Hexadecimal(hex).toDecimal().toLong()));
+                    octal.setText(String.valueOf(new Hexadecimal(hex).toOctal().toLong()));
+                } catch (NumberBaseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

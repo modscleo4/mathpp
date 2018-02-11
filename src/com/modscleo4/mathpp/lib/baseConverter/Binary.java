@@ -41,86 +41,11 @@ public class Binary {
         return new Decimal(sum);
     }
 
-    public Octal toOctal() {
-        long sum;
-        
-        long mod = size % 3, rest = 3 - mod;
-        long q = size + rest, l = size - 1;
-
-        long[] nums = new long[size];
-
-        String bb = "";
-        for (int i = (int)rest; i <= l; i++) {
-            long p = (long)pow(10, --q);
-            long a = this.value / p % 10;
-            nums[i] = a;
-        }
-        long[] conv = new long[3];
-        int pos = 0;
-        for (int i = 0; i < size;) {
-            long max = i + 3;
-            for (int j = i; j < max; j++) {
-                conv[pos] = nums[j];
-                pos++;
-                i++;
-            }
-            pos = 0;
-            sum = 0;
-            long posB;
-            for (int posA=0; posA < 3; posA++) {
-                posB = 2 - posA;
-                long a = conv[posA];
-                long power = (long)pow(2, posB);
-                a = a * power;
-                sum += a;
-            }
-            bb += String.valueOf(sum);
-        }
-        return new Octal(Long.valueOf(bb));
+    public Octal toOctal() throws NumberBaseException {
+        return new Octal(this.toDecimal().toOctal().toLong());
     }
 
     public Hexadecimal toHex() {
-
-        String sumA = "";
-
-        long sum;
-
-        long mod = size % 4, rest = 4 - mod;
-        long q = size + rest, l = size - 1;
-
-        long[] nums = new long[size];
-
-        for (int i = (int)rest; i <= l; i++) {
-            long p = (long)pow(10, --q);
-            long a = this.value / p % 10;
-            nums[i] = a;
-        }
-
-        long[] conv = new long[4];
-        int pos = 0;
-
-        for (int i = 0; i < size;) {
-            long max = i + 4;
-            for (int j = i; j < max; j++) {
-                conv[pos] = nums[i];
-                pos++;
-                i++;
-            }
-            pos = 0;
-            sum = 0;
-            long posB;
-            for (int posA = 0; posA < 4; posA++) {
-                posB = 3 - posA;
-                long a = conv[posA];
-                long power = (long)pow(2, posB);
-                a = a * power;
-                sum += a;
-            }
-            if (sum > 9 && sum < 16)
-                sumA += hexa((int)sum);
-            else
-                sumA += String.valueOf(sum);
-        }
-        return new Hexadecimal(sumA);
+        return new Hexadecimal(this.toDecimal().toHex().toString());
     }
 }

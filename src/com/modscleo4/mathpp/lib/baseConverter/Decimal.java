@@ -43,7 +43,7 @@ public class Decimal {
         return new Binary(Long.valueOf(ans));
     }
 
-    public Octal toOctal() {
+    public Octal toOctal() throws NumberBaseException {
         long c = 2, mod, quo = 8, ai = 8, d = this.toLong();
         if (d < 0) {
 
