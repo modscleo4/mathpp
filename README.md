@@ -3,7 +3,7 @@
 
 Math++ provides functions from number base conversion to Matrix operations, including determinant, matrix multiplication, sum, subtraction, transposing and inverting.
 
-There's a library which you can use in your own app, including Java apks.
+There's a library which you can use in your own app, including Android apks.
 
 All the functions were documented, so all you have to do is put it in your library path and use its functions.
 
