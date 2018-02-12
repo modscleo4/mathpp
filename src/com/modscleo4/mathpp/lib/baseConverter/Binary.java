@@ -2,18 +2,26 @@ package com.modscleo4.mathpp.lib.baseConverter;
 
 import com.sun.istack.internal.NotNull;
 
-import static com.modscleo4.mathpp.lib.baseConverter.utils.Hex.hexa;
 import static java.lang.Math.pow;
 
 /**
- * @Author: Modscleo4 (Dhiego Cassiano Fogaça Barbosa)
- * */
+ * Binary.java
+ * Purpose: Provides number base conversion (binary to dec, oc, hex)
+ *
+ * @author Dhiego Cassiano Fogaça Barbosa
+ * @version 1.0
+ */
 
 public class Binary {
     private long value;
     public int size;
 
-    public Binary(@NotNull long value) throws NumberBaseException {
+    /**
+     * Constructor method
+     *
+     * @param value The binary number on a long var
+     */
+    public Binary(@NotNull long value) {
         String aa = String.valueOf(value);
         if ((aa.contains("2") || aa.contains("3") || aa.contains("4") || aa.contains("5") || aa.contains("6") || aa.contains("7") || aa.contains("8") || aa.contains("9")) || value < 0) {
             throw new NumberBaseException("Not a binary number");
@@ -23,10 +31,20 @@ public class Binary {
         size = aa.length();
     }
 
+    /**
+     * Returns the internal long var
+     *
+     * @return The value internal long
+     */
     public long toLong() {
         return value;
     }
 
+    /**
+     * Converts this Binary to Decimal
+     *
+     * @return The Decimal equivalent
+     */
     public Decimal toDecimal() {
         long sum = 0, b = this.toLong();
 
@@ -41,10 +59,20 @@ public class Binary {
         return new Decimal(sum);
     }
 
-    public Octal toOctal() throws NumberBaseException {
+    /**
+     * Converts this Binary to Octal
+     *
+     * @return The Octal equivalent
+     */
+    public Octal toOctal() {
         return new Octal(this.toDecimal().toOctal().toLong());
     }
 
+    /**
+     * Converts this Binary to Hexadecimal
+     *
+     * @return The Hexadecimal equivalent
+     */
     public Hexadecimal toHex() {
         return new Hexadecimal(this.toDecimal().toHex().toString());
     }

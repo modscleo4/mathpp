@@ -4,21 +4,43 @@ import com.sun.istack.internal.NotNull;
 
 import static com.modscleo4.mathpp.lib.baseConverter.utils.Hex.hexb;
 
+/**
+ * Hexadecimal.java
+ * Purpose: Provides number base conversion (hex to bin, dec, oc)
+ *
+ * @author Dhiego Cassiano Fogaça Barbosa
+ * @version 1.0
+ */
 public class Hexadecimal {
     private String value;
     public int size;
 
+    /**
+     * Constructor method
+     *
+     * @param value The hexadecimal value on a String var
+     */
     public Hexadecimal(@NotNull String value) {
         this.value = value;
         size = value.length();
     }
 
+    /**
+     * Returns the internal String var
+     *
+     * @return The value internal String
+     */
     public String toString() {
         return value;
     }
 
-    public Binary toBinary() throws NumberBaseException {
-        String result = "";
+    /**
+     * Converts this Hexaecimal to Binary
+     *
+     * @return The Binary equivalent
+     */
+    public Binary toBinary() {
+        StringBuilder result = new StringBuilder();
         long l = size - 1;
         int pos = 0;
         char[] arr_x_temp = this.toString().toCharArray();
@@ -33,7 +55,7 @@ public class Hexadecimal {
             long c = 2;
             while (c > 1) {
                 if (b == 1 || b == 0) {
-                    result += "000" + String.valueOf(b);
+                    result.append("000").append(String.valueOf(b));
                     c = 0;
                 } else {
                     long mod, quo = 2, ai = 2;
@@ -49,11 +71,11 @@ public class Hexadecimal {
                             rmods = new StringBuilder(mods).reverse().toString();
                             int tamanho = rmods.length() + 1;
                             if (tamanho == 2) {
-                                result += "00" + String.valueOf(quo) + rmods;
+                                result.append("00").append(String.valueOf(quo)).append(rmods);
                             } else if (tamanho == 3) {
-                                result += "0" + String.valueOf(quo) + rmods;
+                                result.append("0").append(String.valueOf(quo)).append(rmods);
                             } else {
-                                result += String.valueOf(quo) + rmods;
+                                result.append(String.valueOf(quo)).append(rmods);
                             }
                             ai = 0;
                             c = 0;
@@ -64,14 +86,24 @@ public class Hexadecimal {
                 }
             }
         }
-        return new Binary(Long.valueOf(result));
+        return new Binary(Long.valueOf(result.toString()));
     }
 
-    public Decimal toDecimal() throws NumberBaseException {
+    /**
+     * Converts this Hexaecimal to Decimal
+     *
+     * @return The Decimal equivalent
+     */
+    public Decimal toDecimal() {
         return new Decimal(this.toBinary().toDecimal().toLong());
     }
 
-    public Octal toOctal() throws NumberBaseException {
+    /**
+     * Converts this Hexaecimal to Octal
+     *
+     * @return The Octal equivalent
+     */
+    public Octal toOctal() {
         return new Octal(this.toBinary().toOctal().toLong());
     }
 }

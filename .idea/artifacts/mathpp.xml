@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mathpp">
+    <output-path>$PROJECT_DIR$/out/artifacts/mathpp</output-path>
+    <root id="archive" name="mathpp.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Math++" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/commons-lang3-3.7/commons-lang3-3.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/sqlite-jdbc-3.21.0/sqlite-jdbc-3.21.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

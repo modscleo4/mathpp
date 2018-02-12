@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mathppLib">
+    <output-path>$PROJECT_DIR$/out/artifacts/mathppLib</output-path>
+    <root id="archive" name="mathppLib.jar">
+      <element id="directory" name="lib">
+        <element id="dir-copy" path="$PROJECT_DIR$/src/com/modscleo4/mathpp/lib" />
+      </element>
+    </root>
+  </artifact>
+</component>

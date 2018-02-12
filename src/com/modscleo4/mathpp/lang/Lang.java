@@ -7,10 +7,15 @@ import static com.modscleo4.mathpp.settings.GlobalSettings.lang;
 
 public class Lang {
     public static String resWindowTitle;
+    // Main tabs
     public static String resTabBaseConv, resTabMatrix, resTabConf;
+    // Base Converter tab
     public static String resLabelBinary, resLabelDecimal, resLabelOctal, resLabelHex;
+    // Matrix subtabs
+    public static String resTabMatDeterminant, resTabMatMultiply, resTabMatSum, resTabMatSubt, resTabMatTransp, resTabMatInv;
+    // Determinant subtab
+    public static String resLabelDetSize, resDetRandom, resCreateDet, resDetCalc;
 
-    public static String resTabMatDeterminant;
     public static String resMenuFile, resMenuAbout;
 
     public static void loadRes() {
@@ -33,16 +38,30 @@ public class Lang {
 
         resWindowTitle = langBundle.getString("windowTitle");
 
+        // Main tabs
         resTabBaseConv = langBundle.getString("tabBaseConv");
         resTabMatrix = langBundle.getString("tabMatrix");
         resTabConf = langBundle.getString("tabConf");
 
+        // Base Converter tab
         resLabelBinary = langBundle.getString("labelBinary");
         resLabelDecimal = langBundle.getString("labelDecimal");
         resLabelOctal = langBundle.getString("labelOctal");
         resLabelHex = langBundle.getString("labelHex");
 
+        // Matrix subtabs
         resTabMatDeterminant = langBundle.getString("tabMatDeterminant");
+        resTabMatMultiply = langBundle.getString("tabMatMultiply");
+        resTabMatSum = langBundle.getString("tabMatSum");
+        resTabMatSubt = langBundle.getString("tabMatSubt");
+        resTabMatTransp = langBundle.getString("tabMatTransp");
+        resTabMatInv = langBundle.getString("tabMatInv");
+
+        // Determinant subtab
+        resLabelDetSize = langBundle.getString("labelDetSize");
+        resDetRandom = langBundle.getString("detRandom");
+        resCreateDet = langBundle.getString("createDet");
+        resDetCalc = langBundle.getString("detCalc");
 
         resMenuFile = langBundle.getString("menuFile");
         resMenuAbout = langBundle.getString("menuAbout");

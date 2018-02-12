@@ -4,18 +4,40 @@ import com.sun.istack.internal.NotNull;
 
 import static com.modscleo4.mathpp.lib.baseConverter.utils.Hex.hexa;
 
+/**
+ * Decimal.java
+ * Purpose: Provides number base conversion (decimal to bin, oc, hex)
+ *
+ * @author Dhiego Cassiano Fogaça Barbosa
+ * @version 1.0
+ */
 public class Decimal {
     private long value;
 
+    /**
+     * Constructor method
+     *
+     * @param value The decimal value in a long var
+     */
     public Decimal(@NotNull long value) {
         this.value = value;
     }
 
+    /**
+     * Returns the internal long var
+     *
+     * @return The value internal long
+     */
     public long toLong() {
         return value;
     }
 
-    public Binary toBinary() throws NumberBaseException {
+    /**
+     * Converts this Decimal to Binary
+     *
+     * @return The Binary equivalent
+     */
+    public Binary toBinary() {
         long c = 2, mod, quo = 2, ai = 2, d = this.toLong();
         String r, mods = "", rmods, ans = "";
         while (c > 1) {
@@ -43,11 +65,14 @@ public class Decimal {
         return new Binary(Long.valueOf(ans));
     }
 
-    public Octal toOctal() throws NumberBaseException {
+    /**
+     * Converts this Decimal to Octal
+     *
+     * @return The Octal equivalent
+     */
+    public Octal toOctal() {
         long c = 2, mod, quo = 8, ai = 8, d = this.toLong();
-        if (d < 0) {
 
-        }
         String r, mods = "", rmods, ans = "";
         while (c > 1) {
             if (d >= 0 && d <= 7) {
@@ -74,10 +99,15 @@ public class Decimal {
         return new Octal(Long.valueOf(ans));
     }
 
+    /**
+     * Converts this Decimal to Hexadecimal
+     *
+     * @return The Hexadecimal equivalent
+     */
     public Hexadecimal toHex() {
         long c = 2, mod, quo = 16, ai = 16, d = this.toLong();
 
-        String aad, modu, quos, r = "", rmods, ans = "", mods = "";
+        String aad, modu, quos, rmods, ans = "", mods = "";
         while (c > 1) {
             if (d < 10) {
                 return new Hexadecimal(String.valueOf(d));

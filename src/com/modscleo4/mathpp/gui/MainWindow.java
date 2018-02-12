@@ -3,6 +3,7 @@ package com.modscleo4.mathpp.gui;
 import com.modscleo4.mathpp.lang.Lang;
 import com.modscleo4.mathpp.lib.baseConverter.*;
 import com.modscleo4.mathpp.lib.matrix.InvalidMatrixException;
+import com.modscleo4.mathpp.lib.matrix.Matrix;
 import com.modscleo4.mathpp.settings.Settings;
 
 import javax.swing.*;
@@ -13,9 +14,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.modscleo4.mathpp.lib.matrix.Matrix;
-import static com.modscleo4.mathpp.settings.GlobalSettings.*;
 import static com.modscleo4.mathpp.lang.Lang.*;
+import static com.modscleo4.mathpp.settings.GlobalSettings.*;
 
 public class MainWindow {
     private long bin, dec, oc;
@@ -115,7 +115,7 @@ public class MainWindow {
         textLimitMin.setText(String.valueOf(limitMin));
         showCConfig.setSelected(showC);
 
-        CreateDet.addMouseListener(new MouseAdapter() {
+        createDet.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 super.mouseClicked(mouseEvent);
@@ -160,7 +160,7 @@ public class MainWindow {
                     if (isFilled) {
                         detRes.setVisible(true);
                         try {
-                            detRes.setText(String.format("Determinante: %.3f", new Matrix(size, size, matrix).determinant()));
+                            detRes.setText(String.format("Determinante: %.3f", new Matrix(matrix).determinant()));
                         } catch (InvalidMatrixException e) {
                             e.printStackTrace();
                         }
@@ -181,7 +181,16 @@ public class MainWindow {
         labelHex.setText(resLabelHex);
 
         matrixTabPane.setTitleAt(0, resTabMatDeterminant);
+        matrixTabPane.setTitleAt(1, resTabMatMultiply);
+        matrixTabPane.setTitleAt(2, resTabMatSum);
+        matrixTabPane.setTitleAt(3, resTabMatSubt);
+        matrixTabPane.setTitleAt(4, resTabMatTransp);
+        matrixTabPane.setTitleAt(5, resTabMatInv);
 
+        labelDetSize.setText(resLabelDetSize);
+        detRandom.setText(resDetRandom);
+        createDet.setText(resCreateDet);
+        detCalc.setText(resDetCalc);
     }
 
     public static void main(String[] args) {
@@ -238,7 +247,7 @@ public class MainWindow {
     private JButton saveConfigBtn;
     private JPanel tabDeterminant;
     private JPanel matrixPanelDet;
-    private JButton CreateDet;
+    private JButton createDet;
     private JTextField detSize;
     private JCheckBox detRandom;
     private JButton detCalc;
