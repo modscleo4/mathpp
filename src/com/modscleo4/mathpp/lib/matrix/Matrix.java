@@ -15,7 +15,7 @@ import static java.lang.Math.pow;
  */
 
 public class Matrix {
-    public int height, width;
+    private int height, width;
     private double[][] matrix;
 
     /**
@@ -60,6 +60,24 @@ public class Matrix {
 
         matrix = new double[height][width];
         matrix = arr;
+    }
+
+    /**
+     * Gets the width of the Matrix
+     *
+     * @return The Matrix width
+     */
+    public int width() {
+        return width;
+    }
+
+    /**
+     * Gets the height of the Matrix
+     *
+     * @return The Matrix height
+     */
+    public int height() {
+        return height;
     }
 
     /**
@@ -207,7 +225,7 @@ public class Matrix {
      */
     public boolean isTriangular() {
         boolean ret = false;
-        double[][] a = this.toDoubleArray();
+        double[][] a = this.matrix;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
                 if (i < j)
@@ -265,8 +283,8 @@ public class Matrix {
     public boolean equals(@NotNull Matrix mat) {
         if (this.width == mat.width && this.height == mat.height) {
             boolean ret = false;
-            double[][] a = this.toDoubleArray();
-            double[][] b = mat.toDoubleArray();
+            double[][] a = this.matrix;
+            double[][] b = mat.matrix;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     if (a[i][j] == b[i][j]) {
@@ -289,7 +307,7 @@ public class Matrix {
      * @return A new Matrix with the signals of this Matrix inverted
      */
     public Matrix invertSignal() {
-        double[][] mat = this.toDoubleArray();
+        double[][] mat = this.matrix;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 mat[i][j] *= -1;
@@ -308,7 +326,7 @@ public class Matrix {
     public Matrix smaller(@NotNull int line, @NotNull int col) {
         if (this.isSquare() && width > 1) {
             double[][] matSmall = new double[height - 1][width - 1];
-            double[][] mat = this.toDoubleArray();
+            double[][] mat = this.matrix;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     if (i < line) {
@@ -408,7 +426,7 @@ public class Matrix {
                 }
             }
 
-            mat = new Matrix(mat).transpose().toDoubleArray();
+            mat = new Matrix(mat).transpose().matrix;
             double det = this.determinant();
             if (det == 0D) {
                 throw new InvalidMatrixException("This Matrix does not have an inverse. Determinant = 0");
@@ -441,8 +459,8 @@ public class Matrix {
         }
 
         double[][] summed = new double[height][width];
-        double[][] matA = this.toDoubleArray();
-        double[][] matB = toSum.toDoubleArray();
+        double[][] matA = this.matrix;
+        double[][] matB = toSum.matrix;
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -468,8 +486,8 @@ public class Matrix {
         }
 
         double[][] subtracted = new double[height][width];
-        double[][] matA = this.toDoubleArray();
-        double[][] matB = toSub.toDoubleArray();
+        double[][] matA = this.matrix;
+        double[][] matB = toSub.matrix;
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -489,8 +507,8 @@ public class Matrix {
     public Matrix multiply(@NotNull Matrix toMult) {
         if (this.width == toMult.height) {
             double[][] multiplied = new double[this.height][toMult.width];
-            double[][] matA = this.toDoubleArray();
-            double[][] matB = toMult.toDoubleArray();
+            double[][] matA = this.matrix;
+            double[][] matB = toMult.matrix;
 
             for (int i = 0; i < this.height; i++) {
                 for (int j = 0; j < toMult.width; j++) {
