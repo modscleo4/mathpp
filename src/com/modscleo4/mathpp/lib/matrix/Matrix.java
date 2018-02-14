@@ -11,7 +11,7 @@ import static java.lang.Math.pow;
  * Purpose: Provides a Matrix class with common operations
  *
  * @author Dhiego Cassiano Fogaça Barbosa
- * @version 1.0
+ * @version 1.1
  */
 
 public class Matrix {
@@ -81,28 +81,40 @@ public class Matrix {
     }
 
     /**
+     * Resizes the Matrix (Warning: all the values are lost)
+     *
+     * @param newHeight The new height
+     * @param newWidth  The new width
+     */
+    public void resize(@NotNull int newHeight, @NotNull int newWidth) {
+        if (newHeight < 1) {
+            throw new InvalidMatrixException("Height minor than 1");
+        }
+
+        if (newWidth < 1) {
+            throw new InvalidMatrixException("Width minor than 1");
+        }
+
+        height = newHeight;
+        width = newWidth;
+
+        matrix = new double[height][width];
+    }
+
+    /**
      * Checks if the Matrix is null
      *
      * @return A boolean value (true if Matrix is null)
      */
     public boolean isNull() {
-        if (matrix == null) {
-            return true;
-        }
-        else {
-            boolean ret = false;
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < width; j++) {
-                    if (matrix[i][j] == 0) {
-                        ret = true;
-                    }
-                    else {
-                        return false;
-                    }
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (matrix[i][j] != 0) {
+                    return false;
                 }
             }
-            return ret;
         }
+        return true;
     }
 
     /**
@@ -360,7 +372,7 @@ public class Matrix {
      */
     public double cofactor(@NotNull int line, @NotNull int column) {
         if (isSquare()) {
-            return pow((-1), (line + column)) * this.determinant();
+            return pow((-1), (line + column)) * this.smaller(column, line).determinant();
         }
 
         throw new InvalidMatrixException("Matrix is not square");
@@ -375,7 +387,7 @@ public class Matrix {
         double[][] transp = new double[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                transp[j][i] = matrix[i][j];
+                transp[i][j] = matrix[j][i];
             }
         }
 
@@ -397,10 +409,14 @@ public class Matrix {
             }
 
             mat = new Matrix(mat).transpose().toDoubleArray();
+            double det = this.determinant();
+            if (det == 0D) {
+                throw new InvalidMatrixException("This Matrix does not have an inverse. Determinant = 0");
+            }
 
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < width; j++) {
-                    mat[i][j] = (1 / this.determinant()) * mat[i][j];
+                    mat[i][j] = (1 / det) * mat[i][j];
                 }
             }
 
@@ -417,6 +433,13 @@ public class Matrix {
      * @return The two matrix summed
      */
     public Matrix sum(@NotNull Matrix toSum) {
+        if (this.height != toSum.height) {
+            throw new InvalidMatrixException("Matrix A height not equals to Matrix B height");
+        }
+        if (this.width != toSum.width) {
+            throw new InvalidMatrixException("Matrix A width not equals to Matrix B width");
+        }
+
         double[][] summed = new double[height][width];
         double[][] matA = this.toDoubleArray();
         double[][] matB = toSum.toDoubleArray();
@@ -437,6 +460,13 @@ public class Matrix {
      * @return A new Matrix with the values of this subtracted of toSub
      */
     public Matrix subtract(@NotNull Matrix toSub) {
+        if (this.height != toSub.height) {
+            throw new InvalidMatrixException("Matrix A height not equals to Matrix B height");
+        }
+        if (this.width != toSub.width) {
+            throw new InvalidMatrixException("Matrix A width not equals to Matrix B width");
+        }
+
         double[][] subtracted = new double[height][width];
         double[][] matA = this.toDoubleArray();
         double[][] matB = toSub.toDoubleArray();
@@ -458,7 +488,7 @@ public class Matrix {
      */
     public Matrix multiply(@NotNull Matrix toMult) {
         if (this.width == toMult.height) {
-            double[][] multiplied = new double[height][width];
+            double[][] multiplied = new double[this.height][toMult.width];
             double[][] matA = this.toDoubleArray();
             double[][] matB = toMult.toDoubleArray();
 

@@ -8,6 +8,7 @@ import static com.modscleo4.mathpp.lib.baseConverter.utils.Hex.hexb;
  * Hexadecimal.java
  * Purpose: Provides number base conversion (hex to bin, dec, oc)
  *
+ * @deprecated
  * @author Dhiego Cassiano Fogaça Barbosa
  * @version 1.0
  */

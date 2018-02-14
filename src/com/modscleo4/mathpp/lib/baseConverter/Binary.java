@@ -8,6 +8,7 @@ import static java.lang.Math.pow;
  * Binary.java
  * Purpose: Provides number base conversion (binary to dec, oc, hex)
  *
+ * @deprecated
  * @author Dhiego Cassiano Fogaça Barbosa
  * @version 1.0
  */

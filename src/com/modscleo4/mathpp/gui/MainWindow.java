@@ -1,24 +1,23 @@
 package com.modscleo4.mathpp.gui;
 
 import com.modscleo4.mathpp.lang.Lang;
-import com.modscleo4.mathpp.lib.baseConverter.*;
 import com.modscleo4.mathpp.lib.matrix.InvalidMatrixException;
 import com.modscleo4.mathpp.lib.matrix.Matrix;
 import com.modscleo4.mathpp.settings.Settings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.modscleo4.mathpp.lang.Lang.*;
 import static com.modscleo4.mathpp.settings.GlobalSettings.*;
 
 public class MainWindow {
-    private long bin, dec, oc;
+    private String bin, dec, oc;
     private String hex;
 
     public MainWindow() {
@@ -28,13 +27,13 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                bin = Long.valueOf(binary.getText());
+                bin = binary.getText();
                 try {
-                    decimal.setText(String.valueOf(new Binary(bin).toDecimal().toLong()));
-                    octal.setText(String.valueOf(new Binary(bin).toOctal().toLong()));
-                    hexadecimal.setText(new Binary(bin).toHex().toString());
-                } catch (NumberBaseException e) {
-                    e.printStackTrace();
+                    decimal.setText(String.valueOf(Long.parseLong(bin, 2)));
+                    octal.setText(Long.toOctalString(Long.parseLong(bin, 2)));
+                    hexadecimal.setText(Long.toHexString(Long.parseLong(bin, 2)));
+                } catch (NumberFormatException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                 }
             }
         });
@@ -43,13 +42,13 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                dec = Long.valueOf(decimal.getText());
+                dec = decimal.getText();
                 try {
-                    binary.setText(String.valueOf(new Decimal(dec).toBinary().toLong()));
-                    octal.setText(String.valueOf(new Decimal(dec).toOctal().toLong()));
-                    hexadecimal.setText(new Decimal(dec).toHex().toString());
-                } catch (NumberBaseException e) {
-                    e.printStackTrace();
+                    binary.setText(Long.toBinaryString(Long.parseLong(dec)));
+                    octal.setText(Long.toOctalString(Long.parseLong(dec)));
+                    hexadecimal.setText(Long.toHexString(Long.parseLong(dec)));
+                } catch (NumberFormatException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                 }
             }
         });
@@ -58,13 +57,13 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                oc = Long.valueOf(octal.getText());
+                oc = octal.getText();
                 try {
-                    binary.setText(String.valueOf(new Octal(oc).toBinary().toLong()));
-                    decimal.setText(String.valueOf(new Octal(oc).toDecimal().toLong()));
-                    hexadecimal.setText(new Octal(oc).toHex().toString());
-                } catch (NumberBaseException e) {
-                    e.printStackTrace();
+                    binary.setText(Long.toBinaryString(Long.parseLong(oc, 8)));
+                    decimal.setText(String.valueOf(Long.parseLong(oc, 8)));
+                    hexadecimal.setText(Long.toHexString(Long.parseLong(oc, 8)));
+                } catch (NumberFormatException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                 }
             }
         });
@@ -75,19 +74,18 @@ public class MainWindow {
                 super.keyReleased(keyEvent);
                 hex = hexadecimal.getText();
                 try {
-                    binary.setText(String.valueOf(new Hexadecimal(hex).toBinary().toLong()));
-                    decimal.setText(String.valueOf(new Hexadecimal(hex).toDecimal().toLong()));
-                    octal.setText(String.valueOf(new Hexadecimal(hex).toOctal().toLong()));
-                } catch (NumberBaseException e) {
-                    e.printStackTrace();
+                    binary.setText(Long.toBinaryString(Long.parseLong(hex, 16)));
+                    decimal.setText(String.valueOf(Long.parseLong(hex, 16)));
+                    octal.setText(Long.toOctalString(Long.parseLong(hex, 16)));
+                } catch (NumberFormatException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                 }
             }
         });
 
-        saveConfigBtn.addMouseListener(new MouseAdapter() {
+        saveConfigBtn.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                super.mouseClicked(mouseEvent);
+            public void actionPerformed(ActionEvent actionEvent) {
                 showBase = showBaseConfig.isSelected();
                 if (radioEN.isSelected())
                     lang = "en_US";
@@ -115,39 +113,59 @@ public class MainWindow {
         textLimitMin.setText(String.valueOf(limitMin));
         showCConfig.setSelected(showC);
 
-        createDet.addMouseListener(new MouseAdapter() {
+        createDet.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                super.mouseClicked(mouseEvent);
+            public void actionPerformed(ActionEvent actionEvent) {
                 if (!detSize.getText().isEmpty()) {
-                    int size = Integer.valueOf(detSize.getText());
+                    int size;
+                    try {
+                        size = Integer.valueOf(detSize.getText());
+                        if (size < 1) {
+                            throw new InvalidMatrixException(size + " is not a valid Matrix size");
+                        }
+                    } catch (NumberFormatException | InvalidMatrixException e) {
+                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        return;
+                    }
                     matrixPanelDet.removeAll();
                     matrixPanelDet.revalidate();
                     matrixDetArr = new JTextField[size][size];
-                    for (int i = 0; i < size; i++)
-                        for (int j = 0; j < size; j++)
-                            matrixDetArr[i][j] = new JTextField( (detRandom.isSelected()) ? ("" + ThreadLocalRandom.current().nextDouble(limitMin, limitMax + 1)) : "" );
+                    for (int i = 0; i < size; i++) {
+                        for (int j = 0; j < size; j++) {
+                            matrixDetArr[i][j] = new JTextField((detRandom.isSelected()) ? ("" + ThreadLocalRandom.current().nextDouble(limitMin, limitMax + 1)) : "");
+                        }
+                    }
 
                     matrixPanelDet.setLayout(new GridLayout(size, size));
-                    for (int i = 0; i < size; i++)
-                        for (int j = 0; j < size; j++)
-                        matrixPanelDet.add(matrixDetArr[i][j]);
+                    for (int i = 0; i < size; i++) {
+                        for (int j = 0; j < size; j++) {
+                            matrixPanelDet.add(matrixDetArr[i][j]);
+                        }
+                    }
 
                     matrixPanelDet.repaint();
                 }
             }
         });
 
-        detCalc.addMouseListener(new MouseAdapter() {
+        detCalc.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                super.mouseClicked(mouseEvent);
+            public void actionPerformed(ActionEvent actionEvent) {
                 if (matrixDetArr != null) {
-                    int size = Integer.valueOf(detSize.getText());
+                    int size;
+                    try {
+                        size = Integer.valueOf(detSize.getText());
+                        if (size < 1) {
+                            throw new InvalidMatrixException(size + " is not a valid Matrix size");
+                        }
+                    } catch (NumberFormatException | InvalidMatrixException e) {
+                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        return;
+                    }
                     double[][] matrix = new double[size][size];
                     boolean isFilled = true;
-                    for (int i = 0; i < size; i++)
-                        for (int j = 0; j < size; j++)
+                    for (int i = 0; i < size; i++) {
+                        for (int j = 0; j < size; j++) {
                             if (isFilled) {
                                 try {
                                     matrix[i][j] = Double.valueOf(matrixDetArr[i][j].getText());
@@ -156,15 +174,248 @@ public class MainWindow {
                                 }
 
                             }
+                        }
+                    }
 
                     if (isFilled) {
                         detRes.setVisible(true);
                         try {
                             detRes.setText(String.format("Determinante: %.3f", new Matrix(matrix).determinant()));
                         } catch (InvalidMatrixException e) {
-                            e.printStackTrace();
+                            ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         }
                     }
+                }
+            }
+        });
+
+        multMatA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatADialog.main();
+            }
+        });
+
+        multMatB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatBDialog.main();
+            }
+        });
+
+        matMultCalc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double[][] arr;
+                    try {
+                        arr = MatADialog.matA.multiply(MatBDialog.matB).toDoubleArray();
+                    } catch (InvalidMatrixException e) {
+                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        return;
+                    }
+                    matrixMultPanel.removeAll();
+                    matrixMultPanel.revalidate();
+                    matrixMultArr = new JTextField[arr.length][arr[0].length];
+
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixMultArr[i][j] = new JTextField(String.valueOf(arr[i][j]));
+                        }
+                    }
+
+                    matrixMultPanel.setLayout(new GridLayout(arr.length, arr[0].length));
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixMultPanel.add(matrixMultArr[i][j]);
+                        }
+                    }
+
+                    matrixMultPanel.repaint();
+                } catch (NullPointerException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                }
+            }
+        });
+
+        sumMatA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatADialog.main();
+            }
+        });
+
+        sumMatB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatBDialog.main();
+            }
+        });
+
+        matSumCalc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double[][] arr;
+                    try {
+                        arr = MatADialog.matA.sum(MatBDialog.matB).toDoubleArray();
+                    } catch (InvalidMatrixException e) {
+                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        return;
+                    }
+                    matrixSumPanel.removeAll();
+                    matrixSumPanel.revalidate();
+                    matrixSumArr = new JTextField[arr.length][arr[0].length];
+
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixSumArr[i][j] = new JTextField(String.valueOf(arr[i][j]));
+                        }
+                    }
+
+                    matrixSumPanel.setLayout(new GridLayout(arr.length, arr[0].length));
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixSumPanel.add(matrixSumArr[i][j]);
+                        }
+                    }
+
+                    matrixSumPanel.repaint();
+                } catch (NullPointerException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                }
+            }
+        });
+
+        subMatA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatADialog.main();
+            }
+        });
+
+        subMatB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatBDialog.main();
+            }
+        });
+
+        matSubCalc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double[][] arr;
+                    try {
+                        arr = MatADialog.matA.subtract(MatBDialog.matB).toDoubleArray();
+                    } catch (InvalidMatrixException e) {
+                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        return;
+                    }
+                    matrixSubPanel.removeAll();
+                    matrixSubPanel.revalidate();
+                    matrixSubtArr = new JTextField[arr.length][arr[0].length];
+
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixSubtArr[i][j] = new JTextField(String.valueOf(arr[i][j]));
+                        }
+                    }
+
+                    matrixSubPanel.setLayout(new GridLayout(arr.length, arr[0].length));
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixSubPanel.add(matrixSubtArr[i][j]);
+                        }
+                    }
+
+                    matrixSubPanel.repaint();
+                } catch (NullPointerException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                }
+            }
+        });
+
+        transpMatA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatADialog.main();
+            }
+        });
+
+        matTranspCalc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double[][] arr;
+                    try {
+                        arr = MatADialog.matA.transpose().toDoubleArray();
+                    } catch (InvalidMatrixException e) {
+                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        return;
+                    }
+                    matrixTranspPanel.removeAll();
+                    matrixTranspPanel.revalidate();
+                    matrixTranspArr = new JTextField[arr.length][arr[0].length];
+
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixTranspArr[i][j] = new JTextField(String.valueOf(arr[i][j]));
+                        }
+                    }
+
+                    matrixTranspPanel.setLayout(new GridLayout(arr.length, arr[0].length));
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixTranspPanel.add(matrixTranspArr[i][j]);
+                        }
+                    }
+
+                    matrixTranspPanel.repaint();
+                } catch (NullPointerException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                }
+            }
+        });
+
+        invMatA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MatADialog.main();
+            }
+        });
+
+        matInvCalc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double[][] arr;
+                    try {
+                        arr = MatADialog.matA.inverse().toDoubleArray();
+                    } catch (InvalidMatrixException e) {
+                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        return;
+                    }
+                    matrixInvPanel.removeAll();
+                    matrixInvPanel.revalidate();
+                    matrixInvArr = new JTextField[arr.length][arr[0].length];
+
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixInvArr[i][j] = new JTextField(String.valueOf(arr[i][j]));
+                        }
+                    }
+
+                    matrixInvPanel.setLayout(new GridLayout(arr.length, arr[0].length));
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            matrixInvPanel.add(matrixInvArr[i][j]);
+                        }
+                    }
+
+                    matrixInvPanel.repaint();
+                } catch (NullPointerException e) {
+                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                 }
             }
         });
@@ -190,7 +441,19 @@ public class MainWindow {
         labelDetSize.setText(resLabelDetSize);
         detRandom.setText(resDetRandom);
         createDet.setText(resCreateDet);
-        detCalc.setText(resDetCalc);
+        detCalc.setText(resCalc);
+
+        multMatA.setText(resMatA);
+        multMatB.setText(resMatB);
+        matMultCalc.setText(resCalc);
+
+        sumMatA.setText(resMatA);
+        sumMatB.setText(resMatB);
+        matSumCalc.setText(resCalc);
+
+        subMatA.setText(resMatA);
+        subMatB.setText(resMatB);
+        matSubCalc.setText(resCalc);
     }
 
     public static void main(String[] args) {
@@ -262,6 +525,29 @@ public class MainWindow {
     private JPanel tabSum;
     private JPanel tabSubtract;
     private JLabel labelDetSize;
+    private JButton multMatA;
+    private JButton multMatB;
+    private JButton matMultCalc;
+    private JPanel matrixMultPanel;
+    private JButton sumMatA;
+    private JButton sumMatB;
+    private JButton matSumCalc;
+    private JButton subMatA;
+    private JButton subMatB;
+    private JButton matSubCalc;
+    private JPanel matrixSumPanel;
+    private JPanel matrixSubPanel;
+    private JButton transpMatA;
+    private JButton matTranspCalc;
+    private JButton invMatA;
+    private JButton matInvCalc;
+    private JPanel matrixInvPanel;
+    private JPanel matrixTranspPanel;
 
     private JTextField[][] matrixDetArr;
+    private JTextField[][] matrixMultArr;
+    private JTextField[][] matrixSumArr;
+    private JTextField[][] matrixSubtArr;
+    private JTextField[][] matrixTranspArr;
+    private JTextField[][] matrixInvArr;
 }

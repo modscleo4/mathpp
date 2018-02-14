@@ -14,7 +14,12 @@ public class Lang {
     // Matrix subtabs
     public static String resTabMatDeterminant, resTabMatMultiply, resTabMatSum, resTabMatSubt, resTabMatTransp, resTabMatInv;
     // Determinant subtab
-    public static String resLabelDetSize, resDetRandom, resCreateDet, resDetCalc;
+    public static String resLabelDetSize, resDetRandom, resCreateDet;
+    // Matrix general
+    public static String resMatA, resMatB, resCalc;
+    // Matrix dialog
+    public static String resMatLines, resMatColumns;
+    public static String resOk, resCancel;
 
     public static String resMenuFile, resMenuAbout;
 
@@ -61,7 +66,17 @@ public class Lang {
         resLabelDetSize = langBundle.getString("labelDetSize");
         resDetRandom = langBundle.getString("detRandom");
         resCreateDet = langBundle.getString("createDet");
-        resDetCalc = langBundle.getString("detCalc");
+
+        // Matrix general
+        resCalc = langBundle.getString("calc");
+        resMatA = langBundle.getString("matA");
+        resMatB = langBundle.getString("matB");
+
+        // Dialog
+        resMatLines = langBundle.getString("matLines");
+        resMatColumns = langBundle.getString("matColumns");
+        resOk = langBundle.getString("ok");
+        resCancel = langBundle.getString("cancel");
 
         resMenuFile = langBundle.getString("menuFile");
         resMenuAbout = langBundle.getString("menuAbout");

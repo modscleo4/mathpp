@@ -8,6 +8,7 @@ import static com.modscleo4.mathpp.lib.baseConverter.utils.Hex.hexa;
  * Decimal.java
  * Purpose: Provides number base conversion (decimal to bin, oc, hex)
  *
+ * @deprecated
  * @author Dhiego Cassiano Fogaça Barbosa
  * @version 1.0
  */

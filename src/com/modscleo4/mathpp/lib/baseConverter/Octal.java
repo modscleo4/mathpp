@@ -8,6 +8,8 @@ import static java.lang.Math.pow;
  * Octal.java
  * Purpose: Provides number base conversion (octal to bin, dec, hex)
  *
+ *
+ * @deprecated
  * @author Dhiego Cassiano Fogaça Barbosa
  * @version 1.0
  */
