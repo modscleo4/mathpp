@@ -11,9 +11,8 @@ import static java.lang.Math.pow;
  * Purpose: Provides a Matrix class with common operations
  *
  * @author Dhiego Cassiano Fogaça Barbosa
- * @version 1.1
+ * @version 1.2
  */
-
 public class Matrix {
     private int height, width;
     private double[][] matrix;
@@ -24,13 +23,13 @@ public class Matrix {
      * @param h Height of the new Matrix
      * @param w Width of the new Matrix
      */
-    public Matrix(@NotNull int h, @NotNull int w) {
+    public Matrix(int h, int w) {
         if (h < 1) {
-            throw new InvalidMatrixException("Height minor than 1");
+            throw new MatrixException("Height minor than 1");
         }
 
         if (w < 1) {
-            throw new InvalidMatrixException("Width minor than 1");
+            throw new MatrixException("Width minor than 1");
         }
 
         height = h;
@@ -45,15 +44,12 @@ public class Matrix {
      * @param arr double[][] array with the Matrix values (Not Null)
      */
     public Matrix(@NotNull double[][] arr) {
-        int h = arr.length;
-        int w = arr[0].length;
-        if (h < 1) {
-            throw new InvalidMatrixException("Height minor than 1");
+        if (arr == null) {
+            throw new MatrixException("double[][] arr is null");
         }
 
-        if (w < 1) {
-            throw new InvalidMatrixException("Width minor than 1");
-        }
+        int h = arr.length;
+        int w = arr[0].length;
 
         height = h;
         width = w;
@@ -95,6 +91,10 @@ public class Matrix {
      * @param arr double[][] array with the new values
      */
     public void set(@NotNull double[][] arr) {
+        if (arr == null) {
+            throw new MatrixException("double[][] arr is null");
+        }
+
         matrix = arr;
     }
 
@@ -104,13 +104,17 @@ public class Matrix {
      * @param newHeight The new height
      * @param newWidth  The new width
      */
-    public void resize(@NotNull int newHeight, @NotNull int newWidth) {
+    public void resize(int newHeight, int newWidth) {
         if (newHeight < 1) {
-            throw new InvalidMatrixException("Height minor than 1");
+            throw new MatrixException("Height minor than 1");
         }
 
         if (newWidth < 1) {
-            throw new InvalidMatrixException("Width minor than 1");
+            throw new MatrixException("Width minor than 1");
+        }
+
+        if (newHeight == height && newWidth == width) {
+            throw new MatrixException("Cannot resize the Matrix to the same size");
         }
 
         height = newHeight;
@@ -150,21 +154,14 @@ public class Matrix {
      * @return A boolean value (true if this is a identity Matrix)
      */
     public boolean isIdentity() {
-        boolean ret = false;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (i == j && matrix[i][j] == 1) {
-                    ret = true;
-                }
-                else if (i != j && matrix[i][j] == 0) {
-                    ret = true;
-                }
-                else {
+                if (!((i == j && matrix[i][j] == 1) || (i != j && matrix[i][j] == 0))) {
                     return false;
                 }
             }
         }
-        return ret;
+        return true;
     }
 
     /**
@@ -173,21 +170,14 @@ public class Matrix {
      * @return A boolean value (true if this is a diagonal Matrix)
      */
     public boolean isDiagonal() {
-        boolean ret = false;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (i == j && matrix[i][j] != 0) {
-                    ret = true;
-                }
-                else if (i != j && matrix[i][j] == 0) {
-                    ret = true;
-                }
-                else {
+                if (!((i == j && matrix[i][j] != 0) || (i != j && matrix[i][j] == 0))) {
                     return false;
                 }
             }
         }
-        return ret;
+        return true;
     }
 
     /**
@@ -197,6 +187,10 @@ public class Matrix {
      * @return A boolean value (true if this Matrix is the opposite of mat)
      */
     public boolean isOpposite(@NotNull Matrix mat) {
+        if (mat == null) {
+            throw new MatrixException("Matrix mat is null");
+        }
+
         return (this.equals(mat.invertSignal()));
     }
 
@@ -262,7 +256,7 @@ public class Matrix {
      * @param limitMin The smaller value allowed
      * @param limitMax The bigger value allowed
      */
-    public void random(@NotNull int limitMin, @NotNull int limitMax) {
+    public void random(int limitMin, int limitMax) {
         if (limitMin > limitMax) {
             throw new IllegalArgumentException("limitMin greater than limitMax");
         }
@@ -281,21 +275,21 @@ public class Matrix {
      * @return A boolean value (true if this Matrix is equals to mat)
      */
     public boolean equals(@NotNull Matrix mat) {
+        if (mat == null) {
+            throw new MatrixException("Matrix mat is null");
+        }
+
         if (this.width == mat.width && this.height == mat.height) {
-            boolean ret = false;
             double[][] a = this.matrix;
             double[][] b = mat.matrix;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
-                    if (a[i][j] == b[i][j]) {
-                        ret = true;
-                    }
-                    else {
+                    if (a[i][j] != b[i][j]) {
                         return false;
                     }
                 }
             }
-            return ret;
+            return true;
         }
 
         return false;
@@ -320,28 +314,36 @@ public class Matrix {
      * Creates a smaller Matrix (removes a selected line and column of the original)
      *
      * @param line The desired line to remove
-     * @param col  The column to remove from Matrix
+     * @param column  The column to remove from Matrix
      * @return A new Matrix with the line and column of this Matrix removed
      */
-    public Matrix smaller(@NotNull int line, @NotNull int col) {
+    public Matrix smaller(int line, int column) {
+        if (line < 0) {
+            throw new MatrixException("line parameter minor than 0");
+        }
+
+        if (column < 0) {
+            throw new MatrixException("column parameter minor than 0");
+        }
+
         if (this.isSquare() && width > 1) {
             double[][] matSmall = new double[height - 1][width - 1];
             double[][] mat = this.matrix;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     if (i < line) {
-                        if (j < col) {
+                        if (j < column) {
                             matSmall[i][j] = mat[i][j];
                         }
-                        else if (j > col) {
+                        else if (j > column) {
                             matSmall[i][j - 1] = mat[i][j];
                         }
                     }
                     else if (i > line) {
-                        if (j < col) {
+                        if (j < column) {
                             matSmall[i - 1][j] = mat[i][j];
                         }
-                        else if (j > col) {
+                        else if (j > column) {
                             matSmall[i - 1][j - 1] = mat[i][j];
                         }
                     }
@@ -352,10 +354,10 @@ public class Matrix {
         }
 
         if (!isSquare()) {
-            throw new InvalidMatrixException("Matrix is not square");
+            throw new MatrixException("Matrix is not square");
         }
         else {
-            throw new InvalidMatrixException("Matrix size minor than 1");
+            throw new MatrixException("Matrix size minor than 1");
         }
     }
 
@@ -378,7 +380,7 @@ public class Matrix {
             return sum;
         }
 
-        throw new InvalidMatrixException("Matrix is not square");
+        throw new MatrixException("Matrix is not square");
     }
 
     /**
@@ -388,12 +390,20 @@ public class Matrix {
      * @param column The desired column
      * @return the cofactor of the selected line and column
      */
-    public double cofactor(@NotNull int line, @NotNull int column) {
-        if (isSquare()) {
-            return pow((-1), (line + column)) * this.smaller(column, line).determinant();
+    public double cofactor(int line, int column) {
+        if (line < 0) {
+            throw new MatrixException("line parameter minor than 0");
         }
 
-        throw new InvalidMatrixException("Matrix is not square");
+        if (column < 0) {
+            throw new MatrixException("column parameter minor than 0");
+        }
+
+        if (isSquare()) {
+            return pow((-1), (line + column)) * this.smaller(line, column).determinant();
+        }
+
+        throw new MatrixException("Matrix is not square");
     }
 
     /**
@@ -429,7 +439,7 @@ public class Matrix {
             mat = new Matrix(mat).transpose().matrix;
             double det = this.determinant();
             if (det == 0D) {
-                throw new InvalidMatrixException("This Matrix does not have an inverse. Determinant = 0");
+                throw new MatrixException("This Matrix does not have an inverse. Determinant = 0");
             }
 
             for (int i = 0; i < width; i++) {
@@ -441,7 +451,7 @@ public class Matrix {
             return new Matrix(mat);
         }
 
-        throw new InvalidMatrixException("Matrix is not square");
+        throw new MatrixException("Matrix is not square");
     }
 
     /**
@@ -451,11 +461,16 @@ public class Matrix {
      * @return The two matrix summed
      */
     public Matrix sum(@NotNull Matrix toSum) {
-        if (this.height != toSum.height) {
-            throw new InvalidMatrixException("Matrix A height not equals to Matrix B height");
+        if (toSum == null) {
+            throw new MatrixException("Matrix toSum is null");
         }
+
+        if (this.height != toSum.height) {
+            throw new MatrixException("Matrix A height not equals to Matrix B height");
+        }
+
         if (this.width != toSum.width) {
-            throw new InvalidMatrixException("Matrix A width not equals to Matrix B width");
+            throw new MatrixException("Matrix A width not equals to Matrix B width");
         }
 
         double[][] summed = new double[height][width];
@@ -478,11 +493,16 @@ public class Matrix {
      * @return A new Matrix with the values of this subtracted of toSub
      */
     public Matrix subtract(@NotNull Matrix toSub) {
-        if (this.height != toSub.height) {
-            throw new InvalidMatrixException("Matrix A height not equals to Matrix B height");
+        if (toSub == null) {
+            throw new MatrixException("Matrix mat is null");
         }
+
+        if (this.height != toSub.height) {
+            throw new MatrixException("Matrix A height not equals to Matrix B height");
+        }
+
         if (this.width != toSub.width) {
-            throw new InvalidMatrixException("Matrix A width not equals to Matrix B width");
+            throw new MatrixException("Matrix A width not equals to Matrix B width");
         }
 
         double[][] subtracted = new double[height][width];
@@ -505,6 +525,11 @@ public class Matrix {
      * @return A new Matrix with the values of both multiplied
      */
     public Matrix multiply(@NotNull Matrix toMult) {
+        if (toMult == null) {
+            throw new MatrixException("Matrix mat is null");
+        }
+
+
         if (this.width == toMult.height) {
             double[][] multiplied = new double[this.height][toMult.width];
             double[][] matA = this.matrix;
@@ -521,6 +546,6 @@ public class Matrix {
 
         }
 
-        throw new InvalidMatrixException("Matrix A width not equals to matrix B height");
+        throw new MatrixException("Matrix A width not equals to matrix B height");
     }
 }

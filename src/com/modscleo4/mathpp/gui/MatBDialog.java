@@ -1,7 +1,7 @@
 package com.modscleo4.mathpp.gui;
 
-import com.modscleo4.mathpp.lib.matrix.InvalidMatrixException;
 import com.modscleo4.mathpp.lib.matrix.Matrix;
+import com.modscleo4.mathpp.lib.matrix.MatrixException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,6 +63,11 @@ public class MatBDialog extends JDialog {
 
         loadRes();
 
+        if (matB != null) {
+            h = matB.height();
+            w = matB.width();
+        }
+
         if (h != 0 && w != 0) {
             height.setText(String.valueOf(h));
             width.setText(String.valueOf(w));
@@ -96,12 +101,12 @@ public class MatBDialog extends JDialog {
                         h = Integer.valueOf(height.getText());
                         w = Integer.valueOf(width.getText());
                         if (h < 1) {
-                            throw new InvalidMatrixException(h + "is not a valid Matrix height");
+                            throw new MatrixException(h + "is not a valid Matrix height");
                         }
                         if (w < 1) {
-                            throw new InvalidMatrixException(h + "is not a valid Matrix width");
+                            throw new MatrixException(h + "is not a valid Matrix width");
                         }
-                    } catch (NumberFormatException | InvalidMatrixException e) {
+                    } catch (NumberFormatException | MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }

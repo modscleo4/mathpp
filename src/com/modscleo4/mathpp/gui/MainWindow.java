@@ -1,8 +1,8 @@
 package com.modscleo4.mathpp.gui;
 
 import com.modscleo4.mathpp.lang.Lang;
-import com.modscleo4.mathpp.lib.matrix.InvalidMatrixException;
 import com.modscleo4.mathpp.lib.matrix.Matrix;
+import com.modscleo4.mathpp.lib.matrix.MatrixException;
 import com.modscleo4.mathpp.settings.Settings;
 
 import javax.swing.*;
@@ -17,8 +17,7 @@ import static com.modscleo4.mathpp.lang.Lang.*;
 import static com.modscleo4.mathpp.settings.GlobalSettings.*;
 
 public class MainWindow {
-    private String bin, dec, oc;
-    private String hex;
+    private String bin, dec, oc, hex;
 
     public MainWindow() {
         loadText();
@@ -121,9 +120,9 @@ public class MainWindow {
                     try {
                         size = Integer.valueOf(detSize.getText());
                         if (size < 1) {
-                            throw new InvalidMatrixException(size + " is not a valid Matrix size");
+                            throw new MatrixException(size + " is not a valid Matrix size");
                         }
-                    } catch (NumberFormatException | InvalidMatrixException e) {
+                    } catch (NumberFormatException | MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }
@@ -147,7 +146,6 @@ public class MainWindow {
                 }
             }
         });
-
         detCalc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -156,9 +154,9 @@ public class MainWindow {
                     try {
                         size = Integer.valueOf(detSize.getText());
                         if (size < 1) {
-                            throw new InvalidMatrixException(size + " is not a valid Matrix size");
+                            throw new MatrixException(size + " is not a valid Matrix size");
                         }
-                    } catch (NumberFormatException | InvalidMatrixException e) {
+                    } catch (NumberFormatException | MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }
@@ -176,12 +174,13 @@ public class MainWindow {
                             }
                         }
                     }
+                    MatADialog.matA = new Matrix(matrix);
 
                     if (isFilled) {
                         detRes.setVisible(true);
                         try {
                             detRes.setText(String.format("Determinante: %.3f", new Matrix(matrix).determinant()));
-                        } catch (InvalidMatrixException e) {
+                        } catch (MatrixException e) {
                             ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         }
                     }
@@ -195,14 +194,12 @@ public class MainWindow {
                 MatADialog.main();
             }
         });
-
         multMatB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 MatBDialog.main();
             }
         });
-
         matMultCalc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -210,7 +207,7 @@ public class MainWindow {
                     double[][] arr;
                     try {
                         arr = MatADialog.matA.multiply(MatBDialog.matB).toDoubleArray();
-                    } catch (InvalidMatrixException e) {
+                    } catch (MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }
@@ -244,14 +241,12 @@ public class MainWindow {
                 MatADialog.main();
             }
         });
-
         sumMatB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 MatBDialog.main();
             }
         });
-
         matSumCalc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -259,7 +254,7 @@ public class MainWindow {
                     double[][] arr;
                     try {
                         arr = MatADialog.matA.sum(MatBDialog.matB).toDoubleArray();
-                    } catch (InvalidMatrixException e) {
+                    } catch (MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }
@@ -293,14 +288,12 @@ public class MainWindow {
                 MatADialog.main();
             }
         });
-
         subMatB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 MatBDialog.main();
             }
         });
-
         matSubCalc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -308,7 +301,7 @@ public class MainWindow {
                     double[][] arr;
                     try {
                         arr = MatADialog.matA.subtract(MatBDialog.matB).toDoubleArray();
-                    } catch (InvalidMatrixException e) {
+                    } catch (MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }
@@ -342,7 +335,6 @@ public class MainWindow {
                 MatADialog.main();
             }
         });
-
         matTranspCalc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -350,7 +342,7 @@ public class MainWindow {
                     double[][] arr;
                     try {
                         arr = MatADialog.matA.transpose().toDoubleArray();
-                    } catch (InvalidMatrixException e) {
+                    } catch (MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }
@@ -384,7 +376,6 @@ public class MainWindow {
                 MatADialog.main();
             }
         });
-
         matInvCalc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -392,7 +383,7 @@ public class MainWindow {
                     double[][] arr;
                     try {
                         arr = MatADialog.matA.inverse().toDoubleArray();
-                    } catch (InvalidMatrixException e) {
+                    } catch (MatrixException e) {
                         ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
                         return;
                     }

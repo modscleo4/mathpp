@@ -160,9 +160,7 @@
                       </grid>
                       <component id="16d0" class="javax.swing.JTextField" binding="detSize">
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                            <preferred-size width="100" height="-1"/>
-                          </grid>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                       </component>
@@ -514,6 +512,7 @@
                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
+                          <enabled value="false"/>
                           <selected value="false"/>
                           <text value="Exibir a base (console)"/>
                         </properties>
@@ -533,6 +532,7 @@
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
+                          <enabled value="false"/>
                           <text value="Exibir as contas (console)"/>
                         </properties>
                       </component>
@@ -575,6 +575,7 @@
                           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
+                          <enabled value="false"/>
                           <text value="Depuração"/>
                         </properties>
                       </component>
