@@ -219,11 +219,10 @@ public class Matrix {
      */
     public boolean isTriangular() {
         boolean ret = false;
-        double[][] a = this.matrix;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
                 if (i < j)
-                    if (a[i][j] == 0) {
+                    if (matrix[i][j] == 0) {
                         ret = true;
                     }
                     else {
@@ -235,7 +234,7 @@ public class Matrix {
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     if (i > j) {
-                        if (a[i][j] == 0) {
+                        if (matrix[i][j] == 0) {
                             ret = true;
                         }
                         else {
@@ -280,11 +279,9 @@ public class Matrix {
         }
 
         if (this.width == mat.width && this.height == mat.height) {
-            double[][] a = this.matrix;
-            double[][] b = mat.matrix;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
-                    if (a[i][j] != b[i][j]) {
+                    if (this.matrix[i][j] != mat.matrix[i][j]) {
                         return false;
                     }
                 }
@@ -328,23 +325,22 @@ public class Matrix {
 
         if (this.isSquare() && width > 1) {
             double[][] matSmall = new double[height - 1][width - 1];
-            double[][] mat = this.matrix;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     if (i < line) {
                         if (j < column) {
-                            matSmall[i][j] = mat[i][j];
+                            matSmall[i][j] = this.matrix[i][j];
                         }
                         else if (j > column) {
-                            matSmall[i][j - 1] = mat[i][j];
+                            matSmall[i][j - 1] = this.matrix[i][j];
                         }
                     }
                     else if (i > line) {
                         if (j < column) {
-                            matSmall[i - 1][j] = mat[i][j];
+                            matSmall[i - 1][j] = this.matrix[i][j];
                         }
                         else if (j > column) {
-                            matSmall[i - 1][j - 1] = mat[i][j];
+                            matSmall[i - 1][j - 1] = this.matrix[i][j];
                         }
                     }
                 }
@@ -368,8 +364,9 @@ public class Matrix {
      */
     public double determinant() {
         if (isSquare()) {
-            if (width == 1)
+            if (width == 1) {
                 return matrix[0][0];
+            }
 
             double sum = 0;
 
@@ -474,12 +471,10 @@ public class Matrix {
         }
 
         double[][] summed = new double[height][width];
-        double[][] matA = this.matrix;
-        double[][] matB = toSum.matrix;
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                summed[i][j] = matA[i][j] + matB[i][j];
+                summed[i][j] = this.matrix[i][j] + toSum.matrix[i][j];
             }
         }
 
@@ -506,12 +501,10 @@ public class Matrix {
         }
 
         double[][] subtracted = new double[height][width];
-        double[][] matA = this.matrix;
-        double[][] matB = toSub.matrix;
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                subtracted[i][j] = matA[i][j] - matB[i][j];
+                subtracted[i][j] = this.matrix[i][j] - toSub.matrix[i][j];
             }
         }
 
@@ -532,13 +525,11 @@ public class Matrix {
 
         if (this.width == toMult.height) {
             double[][] multiplied = new double[this.height][toMult.width];
-            double[][] matA = this.matrix;
-            double[][] matB = toMult.matrix;
 
             for (int i = 0; i < this.height; i++) {
                 for (int j = 0; j < toMult.width; j++) {
                     for (int k = 0; k < width; k++)
-                        multiplied[i][j] += matA[i][k] * matB[k][j];
+                        multiplied[i][j] += this.matrix[i][k] * toMult.matrix[k][j];
                 }
             }
 
