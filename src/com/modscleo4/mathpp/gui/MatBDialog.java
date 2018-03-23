@@ -107,7 +107,7 @@ public class MatBDialog extends JDialog {
                             throw new MatrixException(h + "is not a valid Matrix width");
                         }
                     } catch (NumberFormatException | MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matB = new Matrix(h, w);

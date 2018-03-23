@@ -9,7 +9,7 @@ public class ExceptionDialog extends JDialog {
     private JButton buttonCancel;
     private JTextPane textPane1;
 
-    public ExceptionDialog(String error) {
+    private ExceptionDialog(String error) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -53,9 +53,10 @@ public class ExceptionDialog extends JDialog {
         dispose();
     }
 
-    public static void main(String error) {
+    public static void main(String error, String errorTitle) {
         ExceptionDialog dialog = new ExceptionDialog(error);
         dialog.pack();
+        dialog.setTitle(errorTitle);
         dialog.setVisible(true);
     }
 }

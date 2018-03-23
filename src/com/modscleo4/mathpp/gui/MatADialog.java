@@ -103,10 +103,10 @@ public class MatADialog extends JDialog {
                             throw new MatrixException(h + "is not a valid Matrix height");
                         }
                         if (w < 1) {
-                            throw new MatrixException(h + "is not a valid Matrix width");
+                            throw new MatrixException(w + "is not a valid Matrix width");
                         }
                     } catch (NumberFormatException | MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matA = new Matrix(h, w);

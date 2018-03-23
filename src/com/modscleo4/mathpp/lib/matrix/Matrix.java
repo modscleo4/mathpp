@@ -86,7 +86,7 @@ public class Matrix {
     }
 
     /**
-     * assign new values to Matrix
+     * Assign new values to Matrix
      *
      * @param arr double[][] array with the new values
      */
@@ -99,7 +99,7 @@ public class Matrix {
     }
 
     /**
-     * Resizes the Matrix (Warning: all the values are lost)
+     * Resize the Matrix (Warning: all the values are lost)
      *
      * @param newHeight The new height
      * @param newWidth  The new width
@@ -191,7 +191,7 @@ public class Matrix {
             throw new MatrixException("Matrix mat is null");
         }
 
-        return (this.equals(mat.invertSignal()));
+        return (equals(mat.invertSignal()));
     }
 
     /**
@@ -200,16 +200,16 @@ public class Matrix {
      * @return A boolean value (true if is symmetric)
      */
     public boolean isSymmetric() {
-        return (this.equals(this.transpose()));
+        return (equals(transpose()));
     }
 
     /**
      * Checks if this Matrix is anti-symmetric (is equals to this Matrix transposed and signal-inverted)
      *
-     * @return A boolean value (true if is symmetric)
+     * @return A boolean value (true if is antisymmetric)
      */
     public boolean isAntiSymmetric() {
-        return (this.equals(this.transpose().invertSignal()));
+        return (equals(transpose().invertSignal()));
     }
 
     /**
@@ -278,10 +278,10 @@ public class Matrix {
             throw new MatrixException("Matrix mat is null");
         }
 
-        if (this.width == mat.width && this.height == mat.height) {
+        if (width == mat.width && height == mat.height) {
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
-                    if (this.matrix[i][j] != mat.matrix[i][j]) {
+                    if (matrix[i][j] != mat.matrix[i][j]) {
                         return false;
                     }
                 }
@@ -298,7 +298,7 @@ public class Matrix {
      * @return A new Matrix with the signals of this Matrix inverted
      */
     public Matrix invertSignal() {
-        double[][] mat = this.matrix;
+        double[][] mat = matrix;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 mat[i][j] *= -1;
@@ -323,24 +323,24 @@ public class Matrix {
             throw new MatrixException("column parameter minor than 0");
         }
 
-        if (this.isSquare() && width > 1) {
+        if (isSquare() && width > 1) {
             double[][] matSmall = new double[height - 1][width - 1];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     if (i < line) {
                         if (j < column) {
-                            matSmall[i][j] = this.matrix[i][j];
+                            matSmall[i][j] = matrix[i][j];
                         }
                         else if (j > column) {
-                            matSmall[i][j - 1] = this.matrix[i][j];
+                            matSmall[i][j - 1] = matrix[i][j];
                         }
                     }
                     else if (i > line) {
                         if (j < column) {
-                            matSmall[i - 1][j] = this.matrix[i][j];
+                            matSmall[i - 1][j] = matrix[i][j];
                         }
                         else if (j > column) {
-                            matSmall[i - 1][j - 1] = this.matrix[i][j];
+                            matSmall[i - 1][j - 1] = matrix[i][j];
                         }
                     }
                 }
@@ -371,7 +371,7 @@ public class Matrix {
             double sum = 0;
 
             for (int i = 0; i < width; i++) {
-                sum += ((i % 2 == 0) ? 1 : -1) * matrix[0][i] * this.smaller(0, i).determinant();
+                sum += ((i % 2 == 0) ? 1 : -1) * matrix[0][i] * smaller(0, i).determinant();
             }
 
             return sum;
@@ -385,7 +385,7 @@ public class Matrix {
      *
      * @param line   The desired line
      * @param column The desired column
-     * @return the cofactor of the selected line and column
+     * @return The cofactor of the selected line and column
      */
     public double cofactor(int line, int column) {
         if (line < 0) {
@@ -397,7 +397,7 @@ public class Matrix {
         }
 
         if (isSquare()) {
-            return pow((-1), (line + column)) * this.smaller(line, column).determinant();
+            return pow((-1), (line + column)) * smaller(line, column).determinant();
         }
 
         throw new MatrixException("Matrix is not square");
@@ -426,18 +426,19 @@ public class Matrix {
      */
     public Matrix inverse() {
         if (isSquare()) {
+            double det = determinant();
+            if (det == 0D) {
+                throw new MatrixException("This Matrix does not have an inverse. Determinant = 0");
+            }
+
             double[][] mat = new double[width][width];
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < width; j++) {
-                    mat[i][j] = this.cofactor(i, j);
+                    mat[i][j] = cofactor(i, j);
                 }
             }
 
             mat = new Matrix(mat).transpose().matrix;
-            double det = this.determinant();
-            if (det == 0D) {
-                throw new MatrixException("This Matrix does not have an inverse. Determinant = 0");
-            }
 
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < width; j++) {
@@ -455,18 +456,18 @@ public class Matrix {
      * Sum this Matrix with another Matrix
      *
      * @param toSum The Matrix to Sum
-     * @return The two matrix summed
+     * @return The two Matrices summed
      */
     public Matrix sum(@NotNull Matrix toSum) {
         if (toSum == null) {
             throw new MatrixException("Matrix toSum is null");
         }
 
-        if (this.height != toSum.height) {
+        if (height != toSum.height) {
             throw new MatrixException("Matrix A height not equals to Matrix B height");
         }
 
-        if (this.width != toSum.width) {
+        if (width != toSum.width) {
             throw new MatrixException("Matrix A width not equals to Matrix B width");
         }
 
@@ -474,7 +475,7 @@ public class Matrix {
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                summed[i][j] = this.matrix[i][j] + toSum.matrix[i][j];
+                summed[i][j] = matrix[i][j] + toSum.matrix[i][j];
             }
         }
 
@@ -484,7 +485,7 @@ public class Matrix {
     /**
      * Subtracts this Matrix with another Matrix
      *
-     * @param toSub the Matrix to subtract
+     * @param toSub The Matrix to subtract
      * @return A new Matrix with the values of this subtracted of toSub
      */
     public Matrix subtract(@NotNull Matrix toSub) {
@@ -492,11 +493,11 @@ public class Matrix {
             throw new MatrixException("Matrix mat is null");
         }
 
-        if (this.height != toSub.height) {
+        if (height != toSub.height) {
             throw new MatrixException("Matrix A height not equals to Matrix B height");
         }
 
-        if (this.width != toSub.width) {
+        if (width != toSub.width) {
             throw new MatrixException("Matrix A width not equals to Matrix B width");
         }
 
@@ -504,7 +505,7 @@ public class Matrix {
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                subtracted[i][j] = this.matrix[i][j] - toSub.matrix[i][j];
+                subtracted[i][j] = matrix[i][j] - toSub.matrix[i][j];
             }
         }
 
@@ -514,7 +515,7 @@ public class Matrix {
     /**
      * Multiplies two Matrices
      *
-     * @param toMult the Matrix to multiply with this
+     * @param toMult The Matrix to multiply with this
      * @return A new Matrix with the values of both multiplied
      */
     public Matrix multiply(@NotNull Matrix toMult) {
@@ -523,13 +524,13 @@ public class Matrix {
         }
 
 
-        if (this.width == toMult.height) {
-            double[][] multiplied = new double[this.height][toMult.width];
+        if (width == toMult.height) {
+            double[][] multiplied = new double[height][toMult.width];
 
-            for (int i = 0; i < this.height; i++) {
+            for (int i = 0; i < height; i++) {
                 for (int j = 0; j < toMult.width; j++) {
                     for (int k = 0; k < width; k++)
-                        multiplied[i][j] += this.matrix[i][k] * toMult.matrix[k][j];
+                        multiplied[i][j] += matrix[i][k] * toMult.matrix[k][j];
                 }
             }
 

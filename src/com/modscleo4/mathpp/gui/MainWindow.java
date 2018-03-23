@@ -26,13 +26,15 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                bin = binary.getText();
-                try {
-                    decimal.setText(String.valueOf(Long.parseLong(bin, 2)));
-                    octal.setText(Long.toOctalString(Long.parseLong(bin, 2)));
-                    hexadecimal.setText(Long.toHexString(Long.parseLong(bin, 2)));
-                } catch (NumberFormatException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                bin = binary.getText().replace(" ", "");
+                if (!bin.equals("")) {
+                    try {
+                        decimal.setText(String.valueOf(Long.parseLong(bin, 2)));
+                        octal.setText(Long.toOctalString(Long.parseLong(bin, 2)));
+                        hexadecimal.setText(Long.toHexString(Long.parseLong(bin, 2)));
+                    } catch (NumberFormatException e) {
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
+                    }
                 }
             }
         });
@@ -41,13 +43,15 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                dec = decimal.getText();
-                try {
-                    binary.setText(Long.toBinaryString(Long.parseLong(dec)));
-                    octal.setText(Long.toOctalString(Long.parseLong(dec)));
-                    hexadecimal.setText(Long.toHexString(Long.parseLong(dec)));
-                } catch (NumberFormatException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                dec = decimal.getText().replace(" ", "");
+                if (!dec.equals("")) {
+                    try {
+                        binary.setText(Long.toBinaryString(Long.parseLong(dec)));
+                        octal.setText(Long.toOctalString(Long.parseLong(dec)));
+                        hexadecimal.setText(Long.toHexString(Long.parseLong(dec)));
+                    } catch (NumberFormatException e) {
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
+                    }
                 }
             }
         });
@@ -56,13 +60,15 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                oc = octal.getText();
-                try {
-                    binary.setText(Long.toBinaryString(Long.parseLong(oc, 8)));
-                    decimal.setText(String.valueOf(Long.parseLong(oc, 8)));
-                    hexadecimal.setText(Long.toHexString(Long.parseLong(oc, 8)));
-                } catch (NumberFormatException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                oc = octal.getText().replace(" ", "");
+                if (!oc.equals("")) {
+                    try {
+                        binary.setText(Long.toBinaryString(Long.parseLong(oc, 8)));
+                        decimal.setText(String.valueOf(Long.parseLong(oc, 8)));
+                        hexadecimal.setText(Long.toHexString(Long.parseLong(oc, 8)));
+                    } catch (NumberFormatException e) {
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
+                    }
                 }
             }
         });
@@ -71,13 +77,15 @@ public class MainWindow {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 super.keyReleased(keyEvent);
-                hex = hexadecimal.getText();
-                try {
-                    binary.setText(Long.toBinaryString(Long.parseLong(hex, 16)));
-                    decimal.setText(String.valueOf(Long.parseLong(hex, 16)));
-                    octal.setText(Long.toOctalString(Long.parseLong(hex, 16)));
-                } catch (NumberFormatException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                hex = hexadecimal.getText().replace(" ", "");
+                if (!hex.equals("")) {
+                    try {
+                        binary.setText(Long.toBinaryString(Long.parseLong(hex, 16)));
+                        decimal.setText(String.valueOf(Long.parseLong(hex, 16)));
+                        octal.setText(Long.toOctalString(Long.parseLong(hex, 16)));
+                    } catch (NumberFormatException e) {
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
+                    }
                 }
             }
         });
@@ -123,7 +131,7 @@ public class MainWindow {
                             throw new MatrixException(size + " is not a valid Matrix size");
                         }
                     } catch (NumberFormatException | MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matrixPanelDet.removeAll();
@@ -157,7 +165,7 @@ public class MainWindow {
                             throw new MatrixException(size + " is not a valid Matrix size");
                         }
                     } catch (NumberFormatException | MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     double[][] matrix = new double[size][size];
@@ -181,7 +189,7 @@ public class MainWindow {
                         try {
                             detRes.setText(String.format("Determinante: %.3f", new Matrix(matrix).determinant()));
                         } catch (MatrixException e) {
-                            ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                            ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         }
                     }
                 }
@@ -208,7 +216,7 @@ public class MainWindow {
                     try {
                         arr = MatADialog.matA.multiply(MatBDialog.matB).toDoubleArray();
                     } catch (MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matrixMultPanel.removeAll();
@@ -230,7 +238,7 @@ public class MainWindow {
 
                     matrixMultPanel.repaint();
                 } catch (NullPointerException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                    ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                 }
             }
         });
@@ -255,7 +263,7 @@ public class MainWindow {
                     try {
                         arr = MatADialog.matA.sum(MatBDialog.matB).toDoubleArray();
                     } catch (MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matrixSumPanel.removeAll();
@@ -277,7 +285,7 @@ public class MainWindow {
 
                     matrixSumPanel.repaint();
                 } catch (NullPointerException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                    ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                 }
             }
         });
@@ -302,7 +310,7 @@ public class MainWindow {
                     try {
                         arr = MatADialog.matA.subtract(MatBDialog.matB).toDoubleArray();
                     } catch (MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matrixSubPanel.removeAll();
@@ -324,7 +332,7 @@ public class MainWindow {
 
                     matrixSubPanel.repaint();
                 } catch (NullPointerException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                    ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                 }
             }
         });
@@ -343,7 +351,7 @@ public class MainWindow {
                     try {
                         arr = MatADialog.matA.transpose().toDoubleArray();
                     } catch (MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matrixTranspPanel.removeAll();
@@ -365,7 +373,7 @@ public class MainWindow {
 
                     matrixTranspPanel.repaint();
                 } catch (NullPointerException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                    ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                 }
             }
         });
@@ -384,7 +392,7 @@ public class MainWindow {
                     try {
                         arr = MatADialog.matA.inverse().toDoubleArray();
                     } catch (MatrixException e) {
-                        ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                        ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                         return;
                     }
                     matrixInvPanel.removeAll();
@@ -406,9 +414,11 @@ public class MainWindow {
 
                     matrixInvPanel.repaint();
                 } catch (NullPointerException e) {
-                    ExceptionDialog.main(e.getClass().toString() + ": " + e.getMessage());
+                    ExceptionDialog.main(e.getLocalizedMessage(), e.getClass().getName());
                 }
             }
+        });
+        binary.addKeyListener(new KeyAdapter() {
         });
     }
 
