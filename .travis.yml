@@ -1,0 +1,6 @@
+language: java
+
+./gradlew assemble
+./gradlew check
+./gradlew build
+./gradlew jar
