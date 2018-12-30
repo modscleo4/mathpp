@@ -1,6 +1,10 @@
 language: java
 
-./gradlew assemble
-./gradlew check
-./gradlew build
-./gradlew jar
+script:
+  - ./gradlew assemble
+  - ./gradlew check
+  - ./gradlew build
+  - ./gradlew jar
+
+jdk:
+  - oraclejdk8
